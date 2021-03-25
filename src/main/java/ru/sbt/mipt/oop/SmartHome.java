@@ -1,10 +1,14 @@
 package ru.sbt.mipt.oop;
 
+import ru.sbt.mipt.oop.alarm.AlarmStateType;
+import ru.sbt.mipt.oop.alarm.AlarmSystem;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class SmartHome implements Actionable{
-    Collection<Room> rooms;
+    private Collection<Room> rooms;
+    private AlarmSystem alarmSystem = new AlarmSystem("password");
 
     public SmartHome() {
         rooms = new ArrayList<>();
@@ -22,9 +26,14 @@ public class SmartHome implements Actionable{
         return rooms;
     }
 
+    public AlarmStateType getAlarmState() {
+        return alarmSystem.getState().getState();
+    }
+
     @Override
     public void execute(Action action) {
         action.act(this);
         rooms.forEach(room -> room.execute(action));
+        alarmSystem.execute(action);
     }
 }

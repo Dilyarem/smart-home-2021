@@ -5,14 +5,13 @@ import ru.sbt.mipt.oop.SmartHome;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 
-public class LightEventProcessor implements EventProcessor{
+public class LightEventProcessor{
     private final SmartHome smartHome;
 
     public LightEventProcessor(SmartHome smartHome) {
         this.smartHome = smartHome;
     }
 
-    @Override
     public void processEvent(SensorEvent event) {
         if (!isLightEvent(event)) return;
 
