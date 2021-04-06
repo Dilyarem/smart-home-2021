@@ -9,10 +9,10 @@ import ru.sbt.mipt.oop.events.SensorEvent;
 
 import static ru.sbt.mipt.oop.events.SensorEventType.DOOR_CLOSED;
 
-public class HallDoorEventHandler implements EventProcessor{
+public class HallDoorEventProcessor implements EventProcessor{
     private final SmartHome smartHome;
 
-    public HallDoorEventHandler(SmartHome smartHome) {
+    public HallDoorEventProcessor(SmartHome smartHome) {
         this.smartHome = smartHome;
     }
 
