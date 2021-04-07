@@ -4,6 +4,10 @@ public class Door {
     private final String id;
     private boolean isOpen;
 
+    public boolean isOpen() {
+        return isOpen;
+    }
+
     public Door(boolean isOpen, String id) {
         this.isOpen = isOpen;
         this.id = id;
