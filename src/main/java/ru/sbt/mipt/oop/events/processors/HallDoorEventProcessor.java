@@ -16,36 +16,46 @@ public class HallDoorEventProcessor implements EventProcessor{
         this.smartHome = smartHome;
     }
 
-    private boolean isHallDoor(String id) {
-        for (Room room : smartHome.getRooms()) {
-            for (Door door : room.getDoors()) {
-                if (door.getId().equals(id) && room.getName().equals("hall")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isHallDoorEvent(SensorEvent event) {
-        return (event.getType().equals(DOOR_CLOSED) && isHallDoor(event.getObjectId()));
+    private boolean isDoorEvent(SensorEvent event) {
+        return (event.getType().equals(DOOR_CLOSED));
     }
 
     private void turnOffAllLight() {
-        for (Room homeRoom : smartHome.getRooms()) {
-            for (Light light : homeRoom.getLights()) {
+        smartHome.execute((innComponent -> {
+            if (innComponent instanceof Light) {
+                Light light = (Light) innComponent;
                 light.setOn(false);
+                System.out.println("Light " + light.getId() + " was turned off.");
             }
-        }
-        System.out.println("All light were turned off.");
+        }));
+    }
+
+    private void turnOffIfDoorIsHall(String doorId) {
+        smartHome.execute((component -> {
+            if (component instanceof Door) {
+                Door door = (Door) component;
+                if (door.getId().equals(doorId)) {
+                    turnOffAllLight();
+                    CommandSender sender = new CommandSender(smartHome);
+                    sender.sendAllLight();
+                }
+            }
+        }));
     }
 
     @Override
     public void processEvent(SensorEvent event) {
-        if (!isHallDoorEvent(event)) return;
+        if (!isDoorEvent(event)) return;
 
-        CommandSender sender = new CommandSender(smartHome);
-        sender.sendAllLight();
-        turnOffAllLight();
+        smartHome.execute((homeComponent -> {
+            if (homeComponent instanceof Room) {
+                Room room = (Room) homeComponent;
+                if (!room.getName().equals("hall")) {
+                    return;
+                }
+
+                turnOffIfDoorIsHall(event.getObjectId());
+            }
+        }));
     }
 }
