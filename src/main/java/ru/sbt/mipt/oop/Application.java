@@ -1,4 +1,5 @@
 package ru.sbt.mipt.oop;
+import ru.sbt.mipt.oop.events.generators.RandomEventGenerator;
 import ru.sbt.mipt.oop.events.processors.*;
 import ru.sbt.mipt.oop.homereader.SmartHomeFromJSReader;
 
@@ -20,7 +21,7 @@ public class Application {
 
         );
         // начинаем цикл обработки событий
-        EventLoop eventLoop = new EventLoop(new AnyEventProcessor(eventProcessors));
+        EventLoop eventLoop = new EventLoop(new AnyEventProcessor(eventProcessors), new RandomEventGenerator());
         eventLoop.startLoop();
     }
 }
