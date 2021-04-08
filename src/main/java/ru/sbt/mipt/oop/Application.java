@@ -12,13 +12,11 @@ public class Application {
     public static void main(String... args) {
         // считываем состояние дома из файла
         SmartHome smartHome = (new SmartHomeFromJSReader("smart-home-1.js")).read();
-
         List<EventProcessor> eventProcessors = Arrays.asList(
                 new LightEventProcessor(smartHome),
                 new DoorEventProcessor(smartHome),
                 new HallDoorEventProcessor(smartHome),
                 new AlarmEventProcessor(smartHome)
-
         );
         // начинаем цикл обработки событий
         EventLoop eventLoop = new EventLoop(new AnyEventProcessor(eventProcessors), new RandomEventGenerator());
