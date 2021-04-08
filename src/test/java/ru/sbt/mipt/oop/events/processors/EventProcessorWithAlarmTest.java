@@ -6,11 +6,11 @@ import ru.sbt.mipt.oop.Room;
 import ru.sbt.mipt.oop.SmartHome;
 import ru.sbt.mipt.oop.alarm.AlarmStateType;
 import ru.sbt.mipt.oop.events.AlarmEvent;
-import ru.sbt.mipt.oop.events.AlarmEventType;
 import ru.sbt.mipt.oop.events.SensorEvent;
-import ru.sbt.mipt.oop.events.SensorEventType;
+import ru.sbt.mipt.oop.events.EventType;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -26,9 +26,18 @@ public class EventProcessorWithAlarmTest {
                 Arrays.asList(doorId1, doorId2),
                 "kitchen");
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
-        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(smartHome);
+
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome),
+                new AlarmEventProcessor(smartHome)
+
+        );
+
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
-        anyEventProcessor.processEvent(new SensorEvent(SensorEventType.DOOR_OPEN, "1"));
+        anyEventProcessor.processEvent(new SensorEvent(EventType.DOOR_OPEN, "1"));
         //verify
         assertEquals(false, doorId1.isOpen());
         assertEquals(true, smartHome.getAlarmState().equals(AlarmStateType.ALERT));
@@ -44,10 +53,19 @@ public class EventProcessorWithAlarmTest {
                 Arrays.asList(doorId1, doorId2),
                 "kitchen");
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
-        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(smartHome);
+
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome),
+                new AlarmEventProcessor(smartHome)
+
+        );
+
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
-        anyEventProcessor.processEvent(new AlarmEvent(AlarmEventType.ALARM_DEACTIVATE, "password"));
-        anyEventProcessor.processEvent(new SensorEvent(SensorEventType.DOOR_OPEN, "1"));
+        anyEventProcessor.processEvent(new AlarmEvent(EventType.ALARM_DEACTIVATE, "password"));
+        anyEventProcessor.processEvent(new SensorEvent(EventType.DOOR_OPEN, "1"));
         //verify
         assertEquals(true, doorId1.isOpen());
         assertEquals(false, smartHome.getAlarmState().equals(AlarmStateType.ALERT));

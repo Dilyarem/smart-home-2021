@@ -6,7 +6,7 @@ import ru.sbt.mipt.oop.Light;
 import ru.sbt.mipt.oop.Room;
 import ru.sbt.mipt.oop.SmartHome;
 import ru.sbt.mipt.oop.events.SensorEvent;
-import ru.sbt.mipt.oop.events.SensorEventType;
+import ru.sbt.mipt.oop.events.EventType;
 
 import java.util.Arrays;
 
@@ -24,7 +24,7 @@ public class EventProcessorTest {
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
         DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
         //execute
-        doorEventProcessor.processEvent(new SensorEvent(SensorEventType.DOOR_CLOSED, "1"));
+        doorEventProcessor.processEvent(new SensorEvent(EventType.DOOR_CLOSED, "1"));
         //verify
         assertEquals(false, doorId1.isOpen());
         assertEquals(true, doorId2.isOpen());
@@ -43,7 +43,7 @@ public class EventProcessorTest {
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
         DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
         //execute
-        doorEventProcessor.processEvent(new SensorEvent(SensorEventType.DOOR_OPEN, "1"));
+        doorEventProcessor.processEvent(new SensorEvent(EventType.DOOR_OPEN, "1"));
         //verify
         assertEquals(true, doorId1.isOpen());
         assertEquals(false, doorId2.isOpen());
@@ -62,7 +62,7 @@ public class EventProcessorTest {
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
         LightEventProcessor lightEventProcessor = new LightEventProcessor(smartHome);
         //execute
-        lightEventProcessor.processEvent(new SensorEvent(SensorEventType.LIGHT_OFF, "1"));
+        lightEventProcessor.processEvent(new SensorEvent(EventType.LIGHT_OFF, "1"));
         //verify
         assertEquals(false, lightId1.isOn());
         assertEquals(true, lightId2.isOn());
@@ -81,7 +81,7 @@ public class EventProcessorTest {
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
         LightEventProcessor lightEventProcessor = new LightEventProcessor(smartHome);
         //execute
-        lightEventProcessor.processEvent(new SensorEvent(SensorEventType.LIGHT_ON, "1"));
+        lightEventProcessor.processEvent(new SensorEvent(EventType.LIGHT_ON, "1"));
         //verify
         assertEquals(true, lightId1.isOn());
         assertEquals(true, lightId2.isOn());
@@ -103,11 +103,11 @@ public class EventProcessorTest {
                 "hall");
         SmartHome smartHome = new SmartHome(Arrays.asList(kitchen, hall));
         DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
-        HallDoorEventHandler hallDoorEventHandler = new HallDoorEventHandler(smartHome);
+        HallDoorEventProcessor hallDoorEventProcessor = new HallDoorEventProcessor(smartHome);
         //execute
-        SensorEvent closeHall = new SensorEvent(SensorEventType.DOOR_CLOSED, "1");
+        SensorEvent closeHall = new SensorEvent(EventType.DOOR_CLOSED, "1");
         doorEventProcessor.processEvent(closeHall);
-        hallDoorEventHandler.processEvent(closeHall);
+        hallDoorEventProcessor.processEvent(closeHall);
         //verify
         assertEquals(false, lightId1.isOn());
         assertEquals(false, lightId2.isOn());
@@ -130,11 +130,11 @@ public class EventProcessorTest {
                 "bedroom");
         SmartHome smartHome = new SmartHome(Arrays.asList(kitchen, bedroom));
         DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
-        HallDoorEventHandler hallDoorEventHandler = new HallDoorEventHandler(smartHome);
+        HallDoorEventProcessor hallDoorEventProcessor = new HallDoorEventProcessor(smartHome);
         //execute
-        SensorEvent closeHall = new SensorEvent(SensorEventType.DOOR_CLOSED, "1");
+        SensorEvent closeHall = new SensorEvent(EventType.DOOR_CLOSED, "1");
         doorEventProcessor.processEvent(closeHall);
-        hallDoorEventHandler.processEvent(closeHall);
+        hallDoorEventProcessor.processEvent(closeHall);
         //verify
         assertEquals(true, lightId1.isOn());
         assertEquals(false, lightId2.isOn());

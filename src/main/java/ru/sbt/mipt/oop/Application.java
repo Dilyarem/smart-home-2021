@@ -1,6 +1,9 @@
 package ru.sbt.mipt.oop;
-import ru.sbt.mipt.oop.events.processors.AnyEventProcessor;
+import ru.sbt.mipt.oop.events.processors.*;
 import ru.sbt.mipt.oop.homereader.SmartHomeFromJSReader;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Application {
@@ -8,8 +11,16 @@ public class Application {
     public static void main(String... args) {
         // считываем состояние дома из файла
         SmartHome smartHome = (new SmartHomeFromJSReader("smart-home-1.js")).read();
+
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome),
+                new AlarmEventProcessor(smartHome)
+
+        );
         // начинаем цикл обработки событий
-        EventLoop eventLoop = new EventLoop(new AnyEventProcessor(smartHome));
+        EventLoop eventLoop = new EventLoop(new AnyEventProcessor(eventProcessors));
         eventLoop.startLoop();
     }
 }
