@@ -9,6 +9,7 @@ import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.EventType;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 public class EventProcessorTest {
@@ -22,13 +23,18 @@ public class EventProcessorTest {
                 Arrays.asList(doorId1, doorId2, doorId3),
                 "kitchen");
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
-        DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome)
+        );
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
-        doorEventProcessor.processEvent(new SensorEvent(EventType.DOOR_CLOSED, "1"));
+        anyEventProcessor.processEvent(new SensorEvent(EventType.DOOR_CLOSED, "1"));
         //verify
-        assertEquals(false, doorId1.isOpen());
-        assertEquals(true, doorId2.isOpen());
-        assertEquals(false, doorId3.isOpen());
+        assertFalse(doorId1.isOpen());
+        assertTrue(doorId2.isOpen());
+        assertFalse(doorId3.isOpen());
     }
 
     @Test
@@ -41,13 +47,18 @@ public class EventProcessorTest {
                 Arrays.asList(doorId1, doorId2),
                 "kitchen");
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
-        DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome)
+        );
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
-        doorEventProcessor.processEvent(new SensorEvent(EventType.DOOR_OPEN, "1"));
+        anyEventProcessor.processEvent(new SensorEvent(EventType.DOOR_OPEN, "1"));
         //verify
-        assertEquals(true, doorId1.isOpen());
-        assertEquals(false, doorId2.isOpen());
-        assertEquals(true, doorId3.isOpen());
+        assertTrue( doorId1.isOpen());
+        assertFalse(doorId2.isOpen());
+        assertTrue( doorId3.isOpen());
     }
 
     @Test
@@ -60,9 +71,14 @@ public class EventProcessorTest {
                 Arrays.asList(),
                 "kitchen");
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
-        LightEventProcessor lightEventProcessor = new LightEventProcessor(smartHome);
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome)
+        );
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
-        lightEventProcessor.processEvent(new SensorEvent(EventType.LIGHT_OFF, "1"));
+        anyEventProcessor.processEvent(new SensorEvent(EventType.LIGHT_OFF, "1"));
         //verify
         assertEquals(false, lightId1.isOn());
         assertEquals(true, lightId2.isOn());
@@ -79,9 +95,14 @@ public class EventProcessorTest {
                 Arrays.asList(),
                 "kitchen");
         SmartHome smartHome = new SmartHome(Arrays.asList(room));
-        LightEventProcessor lightEventProcessor = new LightEventProcessor(smartHome);
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome)
+        );
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
-        lightEventProcessor.processEvent(new SensorEvent(EventType.LIGHT_ON, "1"));
+        anyEventProcessor.processEvent(new SensorEvent(EventType.LIGHT_ON, "1"));
         //verify
         assertEquals(true, lightId1.isOn());
         assertEquals(true, lightId2.isOn());
@@ -102,12 +123,15 @@ public class EventProcessorTest {
                 Arrays.asList(doorId1),
                 "hall");
         SmartHome smartHome = new SmartHome(Arrays.asList(kitchen, hall));
-        DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
-        HallDoorEventProcessor hallDoorEventProcessor = new HallDoorEventProcessor(smartHome);
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome)
+        );
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
         SensorEvent closeHall = new SensorEvent(EventType.DOOR_CLOSED, "1");
-        doorEventProcessor.processEvent(closeHall);
-        hallDoorEventProcessor.processEvent(closeHall);
+        anyEventProcessor.processEvent(closeHall);
         //verify
         assertEquals(false, lightId1.isOn());
         assertEquals(false, lightId2.isOn());
@@ -129,12 +153,15 @@ public class EventProcessorTest {
                 Arrays.asList(doorId1),
                 "bedroom");
         SmartHome smartHome = new SmartHome(Arrays.asList(kitchen, bedroom));
-        DoorEventProcessor doorEventProcessor = new DoorEventProcessor(smartHome);
-        HallDoorEventProcessor hallDoorEventProcessor = new HallDoorEventProcessor(smartHome);
+        List<EventProcessor> eventProcessors = Arrays.asList(
+                new LightEventProcessor(smartHome),
+                new DoorEventProcessor(smartHome),
+                new HallDoorEventProcessor(smartHome)
+        );
+        AnyEventProcessor anyEventProcessor = new AnyEventProcessor(eventProcessors);
         //execute
         SensorEvent closeHall = new SensorEvent(EventType.DOOR_CLOSED, "1");
-        doorEventProcessor.processEvent(closeHall);
-        hallDoorEventProcessor.processEvent(closeHall);
+        anyEventProcessor.processEvent(closeHall);
         //verify
         assertEquals(true, lightId1.isOn());
         assertEquals(false, lightId2.isOn());

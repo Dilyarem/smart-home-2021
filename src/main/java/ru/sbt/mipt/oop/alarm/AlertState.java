@@ -2,12 +2,11 @@ package ru.sbt.mipt.oop.alarm;
 
 import ru.sbt.mipt.oop.AlertMesenger;
 
-public class AlertState extends AlarmSystemState{
-    private final String code;
+public class AlertState implements AlarmState {
+    private Alarm alarm;
 
-    public AlertState(AlarmSystem alarmSystem, String code) {
-        super(alarmSystem);
-        this.code = code;
+    public AlertState(Alarm alarm) {
+        this.alarm = alarm;
     }
 
     @Override
@@ -15,18 +14,18 @@ public class AlertState extends AlarmSystemState{
 
     @Override
     public void deactivate(String code) {
-        if (this.code.equals(code)) {
-            alarmSystem.changeState(new DeactivatedState(alarmSystem));
+        if (alarm.isCorrectCode(code)) {
+            alarm.changeState(new DeactivatedState(alarm));
         }
     }
 
     @Override
-    public void turnToAlert(String code) {
+    public void turnToAlert() {
         (new AlertMesenger()).send();
     }
 
     @Override
-    public AlarmStateType getState() {
-        return AlarmStateType.ALERT;
+    public void react(AlarmReactor alarmReactor) {
+        alarmReactor.onAlarmAlertState();
     }
 }

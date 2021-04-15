@@ -2,28 +2,31 @@ package ru.sbt.mipt.oop.alarm;
 
 import ru.sbt.mipt.oop.AlertMesenger;
 
-public class DeactivatedState extends AlarmSystemState{
+public class DeactivatedState implements AlarmState {
+    final Alarm alarm;
 
-    public DeactivatedState(AlarmSystem alarmSystem) {
-        super(alarmSystem);
+    public DeactivatedState(Alarm alarm) {
+        this.alarm = alarm;
     }
 
     @Override
     public void activate(String code) {
-        alarmSystem.changeState(new ActivatedState(alarmSystem, code));
+        if (alarm.isCorrectCode(code)) {
+            alarm.changeState(new ActivatedState(alarm));
+        }
     }
 
     @Override
     public void deactivate(String code) {}
 
     @Override
-    public void turnToAlert(String code) {
-        alarmSystem.changeState(new AlertState(alarmSystem, code));
+    public void turnToAlert() {
+        alarm.changeState(new AlertState(alarm));
         (new AlertMesenger()).send();
     }
 
     @Override
-    public AlarmStateType getState() {
-        return AlarmStateType.DEACTIVATED;
+    public void react(AlarmReactor alarmReactor) {
+        alarmReactor.onAlarmInactiveState();
     }
 }
