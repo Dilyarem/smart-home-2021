@@ -12,7 +12,7 @@ public class Alarm implements Actionable, AlarmState {
         this.code = code;
     }
 
-    public void changeState(AlarmState state) {
+    void changeState(AlarmState state) {
         this.state = state;
     }
 
