@@ -2,14 +2,13 @@ package ru.sbt.mipt.oop;
 
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.generators.EventGenerator;
-import ru.sbt.mipt.oop.events.generators.RandomEventGenerator;
-import ru.sbt.mipt.oop.events.processors.AnyEventProcessor;
+import ru.sbt.mipt.oop.events.processors.EventProcessor;
 
 public class EventLoop {
-    private final AnyEventProcessor eventProcessor;
+    private final EventProcessor eventProcessor;
     private final EventGenerator eventGenerator;
 
-    public EventLoop(AnyEventProcessor eventProcessor, EventGenerator eventGenerator) {
+    public EventLoop(EventProcessor eventProcessor, EventGenerator eventGenerator) {
         this.eventProcessor = eventProcessor;
         this.eventGenerator = eventGenerator;
     }

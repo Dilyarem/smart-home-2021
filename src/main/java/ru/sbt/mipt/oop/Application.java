@@ -15,10 +15,12 @@ public class Application {
         List<EventProcessor> eventProcessors = Arrays.asList(
                 new LightEventProcessor(smartHome),
                 new DoorEventProcessor(smartHome),
-                new HallDoorEventProcessor(smartHome)
+                new HallDoorEventProcessor(smartHome),
+                new AlarmEventProcessor(smartHome.getAlarm())
         );
         // начинаем цикл обработки событий
-        EventLoop eventLoop = new EventLoop(new AnyEventProcessor(eventProcessors), new RandomEventGenerator());
+        EventLoop eventLoop = new EventLoop(new EventProcessorDecorator(new AnyEventProcessor(eventProcessors),
+                smartHome.getAlarm()), new RandomEventGenerator());
         eventLoop.startLoop();
     }
 }

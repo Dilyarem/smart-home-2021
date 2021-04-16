@@ -5,9 +5,10 @@ import ru.sbt.mipt.oop.Light;
 import ru.sbt.mipt.oop.Room;
 import ru.sbt.mipt.oop.SmartHome;
 import ru.sbt.mipt.oop.commands.CommandSender;
+import ru.sbt.mipt.oop.events.Event;
 import ru.sbt.mipt.oop.events.SensorEvent;
 
-import static ru.sbt.mipt.oop.events.SensorEventType.DOOR_CLOSED;
+import static ru.sbt.mipt.oop.events.EventType.DOOR_CLOSED;
 
 public class HallDoorEventProcessor implements EventProcessor{
     private final SmartHome smartHome;
@@ -16,7 +17,7 @@ public class HallDoorEventProcessor implements EventProcessor{
         this.smartHome = smartHome;
     }
 
-    private boolean isDoorEvent(SensorEvent event) {
+    private boolean isDoorEvent(Event event) {
         return (event.getType().equals(DOOR_CLOSED));
     }
 
@@ -44,8 +45,10 @@ public class HallDoorEventProcessor implements EventProcessor{
     }
 
     @Override
-    public void processEvent(SensorEvent event) {
+    public void processEvent(Event event) {
         if (!isDoorEvent(event)) return;
+
+        SensorEvent sensorEvent = (SensorEvent) event;
 
         smartHome.execute((homeComponent -> {
             if (homeComponent instanceof Room) {
@@ -54,7 +57,7 @@ public class HallDoorEventProcessor implements EventProcessor{
                     return;
                 }
 
-                turnOffIfDoorIsHall(event.getObjectId());
+                turnOffIfDoorIsHall(sensorEvent.getObjectId());
             }
         }));
     }
