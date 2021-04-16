@@ -4,7 +4,6 @@ import org.junit.Test;
 import ru.sbt.mipt.oop.Door;
 import ru.sbt.mipt.oop.Room;
 import ru.sbt.mipt.oop.SmartHome;
-import ru.sbt.mipt.oop.alarm.AlarmStateType;
 import ru.sbt.mipt.oop.events.AlarmEvent;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.EventType;

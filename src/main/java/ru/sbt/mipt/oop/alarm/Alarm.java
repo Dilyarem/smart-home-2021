@@ -3,7 +3,7 @@ package ru.sbt.mipt.oop.alarm;
 import ru.sbt.mipt.oop.Action;
 import ru.sbt.mipt.oop.Actionable;
 
-public class Alarm implements Actionable, AlarmState {
+public class Alarm implements Actionable {
     private AlarmState state;
     private String code;
 
@@ -21,17 +21,14 @@ public class Alarm implements Actionable, AlarmState {
         action.act(this);
     }
 
-    @Override
     public void activate(String code) {
         state.activate(code);
     }
 
-    @Override
     public void deactivate(String code) {
         state.deactivate(code);
     }
 
-    @Override
     public void turnToAlert() {
         state.turnToAlert();
     }
@@ -48,7 +45,6 @@ public class Alarm implements Actionable, AlarmState {
         return (state instanceof AlertState);
     }
 
-    @Override
     public void react(AlarmReactor alarmReactor) {
         state.react(alarmReactor);
     }
