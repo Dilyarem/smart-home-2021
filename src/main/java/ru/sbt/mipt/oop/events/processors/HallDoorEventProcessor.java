@@ -31,8 +31,8 @@ public class HallDoorEventProcessor implements EventProcessor{
         }));
     }
 
-    private void turnOffIfDoorIsHall(String doorId) {
-        smartHome.execute((component -> {
+    private void turnOffIfDoorIsHall(Room room, String doorId) {
+        room.execute((component -> {
             if (component instanceof Door) {
                 Door door = (Door) component;
                 if (door.getId().equals(doorId)) {
@@ -56,8 +56,7 @@ public class HallDoorEventProcessor implements EventProcessor{
                 if (!room.getName().equals("hall")) {
                     return;
                 }
-
-                turnOffIfDoorIsHall(sensorEvent.getObjectId());
+                turnOffIfDoorIsHall(room, sensorEvent.getObjectId());
             }
         }));
     }

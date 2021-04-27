@@ -5,7 +5,7 @@ import ru.sbt.mipt.oop.Actionable;
 
 public class Alarm implements Actionable {
     private AlarmState state;
-    private String code;
+    private final String code;
 
     public Alarm(String code) {
         this.state = new DeactivatedState(this);
