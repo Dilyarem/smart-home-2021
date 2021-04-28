@@ -1,7 +1,9 @@
 package ru.sbt.mipt.oop.events.processors;
 
-import ru.sbt.mipt.oop.Light;
-import ru.sbt.mipt.oop.SmartHome;
+import ru.sbt.mipt.oop.action.Action;
+import ru.sbt.mipt.oop.action.OneLightAction;
+import ru.sbt.mipt.oop.smarthome.Light;
+import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.events.Event;
 import ru.sbt.mipt.oop.events.EventType;
 import ru.sbt.mipt.oop.events.SensorEvent;
@@ -19,19 +21,8 @@ public class LightEventProcessor implements EventProcessor{
 
         SensorEvent sensorEvent = (SensorEvent) event;
 
-        smartHome.execute((component -> {
-            if (component instanceof Light) {
-                Light light = (Light) component;
-                if (light.getId().equals(sensorEvent.getObjectId())) {
-                    updateLightState(light, getLightState(event));
-                }
-            }
-        }));
-    }
-
-    private void updateLightState(Light light, boolean newState) {
-        light.setOn(newState);
-        System.out.println("Light " + light.getId() + " was turned " + (newState ? "on." : "off."));
+        Action setLight = new OneLightAction(sensorEvent.getObjectId(), getLightState(event));
+        smartHome.execute(setLight);
     }
 
     private boolean getLightState(Event event){
