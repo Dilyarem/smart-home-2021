@@ -1,6 +1,7 @@
 package ru.sbt.mipt.oop.events.processors;
 
-import ru.sbt.mipt.oop.SmartHome;
+import ru.sbt.mipt.oop.action.Action;
+import ru.sbt.mipt.oop.action.ActivateDeactivateAlarmAction;
 import ru.sbt.mipt.oop.alarm.Alarm;
 import ru.sbt.mipt.oop.events.AlarmEvent;
 import ru.sbt.mipt.oop.events.Event;
@@ -20,18 +21,12 @@ public class AlarmEventProcessor implements  EventProcessor{
 
         AlarmEvent alarmEvent = (AlarmEvent) event;
 
-        alarm.execute((component -> {
-            if (component instanceof Alarm) {
-                Alarm alarm = (Alarm) component;
-                if (event.getType().equals(ALARM_ACTIVATE)) {
-                    alarm.activate(alarmEvent.getCode());
-                }
+        Action changeAlarmState = new ActivateDeactivateAlarmAction(isToActivate(event), alarmEvent.getCode());
+        alarm.execute(changeAlarmState);
+    }
 
-                if (event.getType().equals(ALARM_DEACTIVATE)) {
-                    alarm.deactivate(alarmEvent.getCode());
-                }
-            }
-        }));
+    private boolean isToActivate(Event event) {
+        return event.getType().equals(ALARM_ACTIVATE);
     }
 
     private boolean isAlarmEvent(Event event) {
